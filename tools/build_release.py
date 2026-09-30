@@ -28,6 +28,7 @@ DIST = ROOT / "dist"
 APP_DIR = DIST / "MaxTest"
 SPEC = ROOT / "build" / "maxtest.spec"
 ISS = ROOT / "build" / "maxtest.iss"
+STABLE_NAME = "MaxTest-Setup.exe"
 
 ISCC_CANDIDATES = (
     Path(r"C:\Program Files (x86)\Inno Setup 6\ISCC.exe"),
@@ -98,6 +99,10 @@ def build_installer() -> Path:
     target = DIST / f"MaxTest-Setup-{installer_version()}.exe"
     if not target.exists():
         raise SystemExit(f"Установщик не создан: {target}")
+
+    # Копия с постоянным именем: кнопка «Скачать» в README ведёт на
+    # /releases/latest/download/MaxTest-Setup.exe и должна работать для любой версии.
+    shutil.copyfile(target, DIST / STABLE_NAME)
     return target
 
 
