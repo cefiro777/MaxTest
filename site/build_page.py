@@ -114,6 +114,8 @@ def structured_data(faq: list[tuple[str, str]], steps: list[tuple[str, str]]) ->
             "fileSize": "28.4 MB",
             "inLanguage": "ru",
             "license": "https://opensource.org/licenses/MIT",
+            "codeRepository": "https://github.com/cefiro777/MaxTest",
+            "sameAs": ["https://github.com/cefiro777/MaxTest"],
             "isAccessibleForFree": True,
             "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RUB"},
             "image": f"{SITE}/assets/og-image.png",

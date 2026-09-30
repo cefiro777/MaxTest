@@ -35,3 +35,4 @@ MaxTest решает задачу службы охраны труда и отд
 
 - Страница программы и руководство: https://infomaxtest.ru/
 - Скачать установщик: https://infomaxtest.ru/download/MaxTest-Setup-1.0.0.exe
+- Исходный код и релизы: https://github.com/cefiro777/MaxTest
