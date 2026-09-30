@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://infomaxtest.ru/</loc>
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://infomaxtest.ru/assets/glavnoe-okno.jpg</image:loc>
+      <image:title>Главное окно программы MaxTest</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://infomaxtest.ru/assets/konstruktor-testov.jpg</image:loc>
+      <image:title>Конструктор тестов MaxTest</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://infomaxtest.ru/assets/prohozhdenie-testa.jpg</image:loc>
+      <image:title>Прохождение теста сотрудником</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://infomaxtest.ru/assets/rezultaty-attestacii.jpg</image:loc>
+      <image:title>Результаты аттестации и отчёты</image:title>
+    </image:image>
+  </url>
+</urlset>

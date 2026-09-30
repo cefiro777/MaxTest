@@ -1,0 +1,1168 @@
+<title>MaxTest — аттестация сотрудников офлайн</title>
+
+<style>
+  :root {
+    --paper: #F5F7FA;
+    --surface: #FFFFFF;
+    --ink: #0E1726;
+    --muted: #5A6478;
+    --rule: #D8DEE9;
+    --rule-strong: #B9C2D2;
+    --accent: #2457D6;
+    --accent-soft: #E7EDFC;
+    --warn: #9A5B0B;
+    --warn-soft: #FBF1DF;
+    --good: #15803D;
+    --good-soft: #E7F3EB;
+
+    --display: Georgia, "Times New Roman", "Liberation Serif", serif;
+    --body: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --mono: Consolas, "SF Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+
+    --measure: 68ch;
+    --gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0D1119;
+      --surface: #151B25;
+      --ink: #E4E9F2;
+      --muted: #98A3B8;
+      --rule: #263040;
+      --rule-strong: #35415A;
+      --accent: #85A8FF;
+      --accent-soft: #1B2740;
+      --warn: #E0A45C;
+      --warn-soft: #2A2114;
+      --good: #6ECF92;
+      --good-soft: #14251A;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #0D1119;
+    --surface: #151B25;
+    --ink: #E4E9F2;
+    --muted: #98A3B8;
+    --rule: #263040;
+    --rule-strong: #35415A;
+    --accent: #85A8FF;
+    --accent-soft: #1B2740;
+    --warn: #E0A45C;
+    --warn-soft: #2A2114;
+    --good: #6ECF92;
+    --good-soft: #14251A;
+  }
+
+  :root[data-theme="light"] {
+    --paper: #F5F7FA;
+    --surface: #FFFFFF;
+    --ink: #0E1726;
+    --muted: #5A6478;
+    --rule: #D8DEE9;
+    --rule-strong: #B9C2D2;
+    --accent: #2457D6;
+    --accent-soft: #E7EDFC;
+    --warn: #9A5B0B;
+    --warn-soft: #FBF1DF;
+    --good: #15803D;
+    --good-soft: #E7F3EB;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  code, .mono { font-family: var(--mono); font-size: 0.92em; }
+  code {
+    background: var(--accent-soft);
+    padding: 0.1em 0.36em;
+    border-radius: 3px;
+    word-break: break-word;
+  }
+
+  /* ------------------------------------------------------------- шапка */
+
+  .masthead {
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface);
+  }
+
+  .masthead-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.25rem, 4vw, 3rem) clamp(2rem, 4vw, 3rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.85fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  @media (max-width: 860px) {
+    .masthead-inner { grid-template-columns: 1fr; }
+  }
+
+  .wordmark {
+    font-family: var(--display);
+    font-size: clamp(2.6rem, 6vw, 4rem);
+    line-height: 1.04;
+    margin: 0.6rem 0 0;
+    letter-spacing: -0.015em;
+  }
+
+  .wordmark span { color: var(--accent); }
+
+  /* Видно поисковым роботам и скринридерам, не видно глазом. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .thesis {
+    font-size: clamp(1.05rem, 2.2vw, 1.28rem);
+    line-height: 1.5;
+    max-width: 34ch;
+    margin: 1.1rem 0 0;
+  }
+
+  .lede {
+    color: var(--muted);
+    max-width: 52ch;
+    margin: 1.1rem 0 0;
+  }
+
+  .datasheet {
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    padding: 1.15rem 1.35rem 1.35rem;
+  }
+
+  .datasheet h2 {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 0.85rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .datasheet dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.45rem 1rem;
+    font-size: 14.5px;
+  }
+
+  .datasheet dt { color: var(--muted); }
+  .datasheet dd {
+    margin: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .datasheet .file {
+    margin-top: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    word-break: break-all;
+  }
+
+  .datasheet .file strong { color: var(--ink); font-weight: 600; }
+
+  .download {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-top: 1.1rem;
+    padding: 0.75rem 1.1rem;
+    background: var(--accent);
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: 600;
+    border: 1px solid var(--accent);
+  }
+
+  .download:hover { filter: brightness(1.08); }
+  .download .size { font-family: var(--mono); font-size: 12.5px; font-weight: 400; opacity: 0.85; }
+
+  .checksum {
+    margin: 0.75rem 0 0;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.55;
+    color: var(--muted);
+    word-break: break-all;
+  }
+
+  .checksum span { color: var(--ink); }
+
+  /* ------------------------------------------------------------- каркас */
+
+  .shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(1.25rem, 4vw, 3rem) 5rem;
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  @media (max-width: 980px) {
+    .shell { grid-template-columns: 1fr; }
+    .toc { display: none; }
+  }
+
+  .toc {
+    position: sticky;
+    top: 2rem;
+    padding-top: var(--gap);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .toc ol { list-style: none; margin: 0.8rem 0 0; padding: 0; }
+  .toc li { margin: 0 0 0.55rem; }
+
+  .toc a {
+    color: var(--muted);
+    text-decoration: none;
+    display: block;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--rule);
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .toc a:hover { color: var(--ink); }
+  .toc a[aria-current="true"] { color: var(--accent); border-left-color: var(--accent); }
+
+  main { min-width: 0; }
+
+  section { padding-top: var(--gap); scroll-margin-top: 1.5rem; }
+
+  section > h2 {
+    font-size: clamp(1.6rem, 3.4vw, 2.15rem);
+    line-height: 1.15;
+    margin: 0.5rem 0 0.9rem;
+    letter-spacing: -0.01em;
+  }
+
+  section > h2 + p { margin-top: 0; }
+
+  h3 {
+    font-size: 1.16rem;
+    margin: 2rem 0 0.55rem;
+  }
+
+  p, li { max-width: var(--measure); }
+  p { margin: 0 0 1rem; }
+
+  .rule { border: 0; border-top: 1px solid var(--rule); margin: 0; }
+
+  /* ------------------------------------------------------------- блоки */
+
+  .spec {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.6rem 0 1.4rem;
+    font-size: 15px;
+  }
+
+  .spec caption {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 0.5rem;
+  }
+
+  .spec th, .spec td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.62rem 0.9rem 0.62rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .spec th {
+    font-weight: 600;
+    width: 34%;
+    white-space: normal;
+  }
+
+  .spec td { color: var(--muted); }
+  .spec tr:last-child th, .spec tr:last-child td { border-bottom: 0; }
+
+  .scroller { overflow-x: auto; }
+
+  .facts { list-style: none; margin: 0.4rem 0 1.5rem; padding: 0; }
+
+  .facts li {
+    padding: 0.6rem 0 0.6rem 1.4rem;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+    max-width: var(--measure);
+  }
+
+  .facts li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 1.15rem;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+  }
+
+  .facts li:last-child { border-bottom: 0; }
+  .facts strong { font-weight: 600; }
+
+  .steps { counter-reset: step; }
+
+  .step {
+    display: grid;
+    grid-template-columns: 3.2rem minmax(0, 1fr);
+    gap: 0 1.2rem;
+    padding: 1.6rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .step::before {
+    counter-increment: step;
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    padding-top: 0.35rem;
+    letter-spacing: 0.06em;
+  }
+
+  .step h3 { margin: 0 0 0.4rem; font-size: 1.22rem; }
+  .step > div > *:last-child { margin-bottom: 0; }
+
+  @media (max-width: 620px) {
+    .step { grid-template-columns: 1fr; gap: 0.35rem; }
+    .step::before { padding-top: 0; }
+  }
+
+  .note {
+    border-left: 3px solid var(--warn);
+    background: var(--warn-soft);
+    padding: 0.9rem 1.1rem;
+    margin: 1.2rem 0;
+    max-width: var(--measure);
+  }
+
+  .note p { margin: 0; }
+  .note p + p { margin-top: 0.6rem; }
+  .note .eyebrow { color: var(--warn); display: block; margin-bottom: 0.3rem; }
+
+  figure {
+    margin: 1.8rem 0;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+
+  figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  figcaption {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--muted);
+    padding: 0.7rem 0.95rem;
+  }
+
+  .formula {
+    font-family: var(--mono);
+    font-size: 14px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: 0.85rem 1rem;
+    margin: 0.9rem 0 1.3rem;
+    max-width: var(--measure);
+    overflow-x: auto;
+  }
+
+  .faq { margin-top: 0.4rem; }
+
+  .faq details {
+    border-bottom: 1px solid var(--rule);
+    padding: 0.15rem 0;
+    max-width: var(--measure);
+  }
+
+  .faq summary {
+    cursor: pointer;
+    padding: 0.85rem 0;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; color: var(--accent); font-weight: 400; }
+  .faq details[open] summary::after { content: "−"; }
+  .faq summary:hover { color: var(--accent); }
+  .faq details > p { margin: 0 0 0.95rem; }
+
+  .support {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 1.6rem;
+    align-items: start;
+    border: 1px solid var(--rule-strong);
+    background: var(--surface);
+    padding: 1.4rem;
+    margin-top: 1rem;
+  }
+
+  .support img { width: 100%; height: auto; display: block; }
+  .support p:last-child { margin-bottom: 0; }
+
+  @media (max-width: 620px) {
+    .faq { margin-top: 0.4rem; }
+
+  .faq details {
+    border-bottom: 1px solid var(--rule);
+    padding: 0.15rem 0;
+    max-width: var(--measure);
+  }
+
+  .faq summary {
+    cursor: pointer;
+    padding: 0.85rem 0;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; color: var(--accent); font-weight: 400; }
+  .faq details[open] summary::after { content: "−"; }
+  .faq summary:hover { color: var(--accent); }
+  .faq details > p { margin: 0 0 0.95rem; }
+
+  .support { grid-template-columns: 1fr; }
+    .support figure { max-width: 220px; margin: 0 auto; }
+  }
+
+  footer {
+    border-top: 1px solid var(--rule);
+    margin-top: var(--gap);
+    padding-top: 1.4rem;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  footer p { max-width: var(--measure); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+  }
+
+  html { scroll-behavior: smooth; }
+</style>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <p class="eyebrow">Аттестация персонала · Windows · офлайн</p>
+      <h1 class="wordmark">Max<span>Test</span><span class="sr-only"> — программа
+        для тестирования и аттестации сотрудников на компьютере с Windows</span></h1>
+      <p class="thesis">
+        Программа для проверки знаний сотрудников на одном компьютере.
+        Без интернета, без сервера, без передачи данных на чужие серверы.
+      </p>
+      <p class="lede">
+        Создавайте тесты любого объёма, проводите проверку знаний на рабочем
+        месте и получайте протоколы — не отправляя ни фамилии, ни результаты
+        в облачные анкеты.
+      </p>
+    </div>
+
+    <div class="datasheet">
+      <h2>Коротко о программе</h2>
+      <dl>
+        <dt>Система</dt><dd>Windows 10 / 11, 64 бита</dd>
+        <dt>Установка</dt><dd>без прав администратора</dd>
+        <dt>Интернет</dt><dd>не требуется</dd>
+        <dt>Типов вопросов</dt><dd>5</dd>
+        <dt>Вопросов в тесте</dt><dd>не ограничено</dd>
+        <dt>Сотрудников</dt><dd>не ограничено</dd>
+        <dt>Формат отчёта</dt><dd>Excel (.xlsx)</dd>
+        <dt>Лицензия</dt><dd>MIT, бесплатно</dd>
+        <dt>Версия</dt><dd>1.0.0</dd>
+      </dl>
+      <a class="download" href="https://infomaxtest.ru/download/MaxTest-Setup-1.0.0.exe">
+        Скачать установщик <span class="size">28,4 МБ</span>
+      </a>
+      <p class="checksum">
+        MaxTest-Setup-1.0.0.exe<br>
+        SHA-256 <span>ad240b6480ca7ce2dccff5851a1fc1e2094a2735123dd203180840c3c3d3241a</span>
+      </p>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="toc" aria-label="Содержание">
+    <p class="eyebrow">Содержание</p>
+    <ol>
+      <li><a href="#about">Что это и для кого</a></li>
+      <li><a href="#features">Возможности</a></li>
+      <li><a href="#screens">Как выглядит</a></li>
+      <li><a href="#guide">Руководство</a></li>
+      <li><a href="#types">Типы вопросов</a></li>
+      <li><a href="#scoring">Как считается балл</a></li>
+      <li><a href="#data">Данные и копии</a></li>
+      <li><a href="#trouble">Если что-то не так</a></li>
+      <li><a href="#limits">Чего программа не делает</a></li>
+      <li><a href="#faq">Частые вопросы</a></li>
+      <li><a href="#support">Поддержать проект</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="about">
+      <p class="eyebrow">О программе</p>
+      <h2>Что это и для кого</h2>
+      <p>
+        MaxTest закрывает обычную задачу отдела кадров и службы охраны труда:
+        провести плановую проверку знаний, получить протокол и понять, какие темы
+        в коллективе проседают. Всё происходит на одном рабочем компьютере.
+      </p>
+      <p>
+        Администратор собирает тест в конструкторе — с картинками, разделами и
+        правилами оценивания. Сотрудник садится за тот же компьютер, выбирает себя
+        в списке и проходит тест. Результат сохраняется сразу, отчёт выгружается
+        в Excel одной кнопкой.
+      </p>
+
+      <ul class="facts">
+        <li><strong>Данные не покидают компьютер.</strong> Ни при создании теста, ни при прохождении, ни при выгрузке отчёта.</li>
+        <li><strong>Файл теста самодостаточен.</strong> Картинки лежат внутри файла — тест переносится на флешке одним файлом.</li>
+        <li><strong>Сбой не теряет попытку.</strong> Прогресс пишется каждые 15 секунд, после аварийного завершения программа предложит продолжить с того же вопроса.</li>
+        <li><strong>История аттестаций накапливается.</strong> Результаты за всё время лежат в одной базе, сотрудников не удаляют, а скрывают.</li>
+      </ul>
+    </section>
+
+    <hr class="rule">
+
+    <section id="features">
+      <p class="eyebrow">Функционал</p>
+      <h2>Возможности</h2>
+      <p>
+        Ниже — полный список того, что программа умеет сегодня, сгруппированный по
+        разделам главного окна.
+      </p>
+
+      <div class="scroller">
+        <table class="spec">
+          <caption>Конструктор тестов</caption>
+          <tbody>
+            <tr><th>Типы вопросов</th><td>Один ответ, несколько ответов, ввод текста, установление соответствия, упорядочивание</td></tr>
+            <tr><th>Картинки</th><td>Вставка из файла с автоматическим уменьшением и сжатием; хранятся внутри файла теста</td></tr>
+            <tr><th>Вес вопроса</th><td>От 0 до 100 баллов; вопрос с весом 0 не влияет на оценку</td></tr>
+            <tr><th>Разделы</th><td>Темы внутри теста: отбор вопросов по разделам и подсчёт результата по темам</td></tr>
+            <tr><th>Проверка теста</th><td>Панель замечаний: пустые варианты, вопрос без правильного ответа, потерянная картинка, ошибки шкалы. Щелчок по строке ведёт к вопросу</td></tr>
+            <tr><th>Предпросмотр</th><td>Вопрос ровно в том виде, в каком его увидит сотрудник — с перемешанными вариантами</td></tr>
+            <tr><th>Прочее</th><td>Дублирование вопроса, изменение порядка, пояснение к ответу для разбора ошибок</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="scroller">
+        <table class="spec">
+          <caption>Проведение аттестации</caption>
+          <tbody>
+            <tr><th>Выбор сотрудника</th><td>Список с поиском по фамилии; нового человека можно завести на месте</td></tr>
+            <tr><th>Перемешивание</th><td>Вопросы, варианты ответа, правые части соответствий и пункты упорядочивания. Варианты вроде «Все перечисленное» остаются на месте</td></tr>
+            <tr><th>Отбор вопросов</th><td>Все вопросы, случайные N из банка или по N из каждого раздела</td></tr>
+            <tr><th>Таймер</th><td>На весь тест и на отдельный вопрос; за 5 минут до конца подсвечивается, по истечении тест сдаётся автоматически</td></tr>
+            <tr><th>Навигация</th><td>Линейная или с возвратом к предыдущим вопросам — на выбор автора теста</td></tr>
+            <tr><th>Восстановление</th><td>Прогресс сохраняется каждые 15 секунд и при каждом ответе</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="scroller">
+        <table class="spec">
+          <caption>Оценивание</caption>
+          <tbody>
+            <tr><th>Частичный балл</th><td>Для вопросов с несколькими ответами, со штрафом за лишние варианты или без него</td></tr>
+            <tr><th>Текстовые ответы</th><td>Список допустимых вариантов; сравнение без учёта регистра, пробелов и «ё», либо по вхождению эталона, либо посимвольно</td></tr>
+            <tr><th>Ручная проверка</th><td>Развёрнутые ответы уходят в отдельную очередь: проверяющий читает и решает, засчитывать ли. Балл и оценка пересчитываются сразу</td></tr>
+            <tr><th>Шкала</th><td>«Зачёт / незачёт», пятибалльная или своя с произвольными порогами в целых процентах</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="scroller">
+        <table class="spec">
+          <caption>Результаты и отчёты</caption>
+          <tbody>
+            <tr><th>Журнал попыток</th><td>Фильтры по тесту, сотруднику, диапазону дат и признаку «только не сдавшие»</td></tr>
+            <tr><th>Разбор попытки</th><td>Что спросили, что человек ответил, что было правильно, пояснение автора — и разбивка по разделам</td></tr>
+            <tr><th>Excel</th><td>Четыре листа: сводная, по вопросам, по разделам и «Сложные вопросы» — где ошибались чаще всего</td></tr>
+            <tr><th>Резервные копии</th><td>Копия базы раз в сутки автоматически, хранятся 30 последних; копия по требованию — кнопкой</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="scroller">
+        <table class="spec">
+          <caption>Защита и эксплуатация</caption>
+          <tbody>
+            <tr><th>PIN-код</th><td>Закрывает конструктор, результаты, проверку ответов и справочник сотрудников. При запуске тестирования разделы блокируются сразу</td></tr>
+            <tr><th>Установка</th><td>Мастер с выбором папки, ярлыками и установкой PIN; без прав администратора</td></tr>
+            <tr><th>Удаление</th><td>Через «Приложения и возможности». Результаты сохраняются, если явно не согласиться их удалить</td></tr>
+            <tr><th>Диагностика</th><td>Команда <code>MaxTest.exe --selfcheck</code> проверяет плагины и права на запись</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section id="screens">
+      <p class="eyebrow">Интерфейс</p>
+      <h2>Как выглядит</h2>
+      <p>
+        Интерфейс рассчитан на того, кто не изучает программу заранее: подписи
+        вместо иконок, крупный шрифт на экране прохождения, никаких скрытых меню.
+      </p>
+
+      <figure>
+        <img src="{{main}}" alt="Главное окно MaxTest: плитки «Пройти тест», «Конструктор тестов», «Результаты», «Сотрудники»" loading="lazy">
+        <figcaption>Главное окно. Наверху — сводка по базе, внизу — состояние защиты PIN-кодом.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="{{player}}" alt="Экран прохождения теста: картинка, вопрос и крупные варианты ответа" loading="lazy">
+        <figcaption>Прохождение теста. Крупные варианты ответа, таймер и прогресс в шапке.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="{{editor}}" alt="Конструктор тестов: список вопросов слева, редактор вопроса справа" loading="lazy">
+        <figcaption>Конструктор. Слева — банк вопросов, справа — форма под выбранный тип, внизу — проверка теста.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="{{results}}" alt="Окно результатов: таблица попыток с фильтрами" loading="lazy">
+        <figcaption>Результаты. Не сдавшие выделены цветом, внизу — сводка по выборке.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="{{attempt}}" alt="Разбор попытки: вопросы, ответы сотрудника, правильные ответы" loading="lazy">
+        <figcaption>Разбор попытки. Данные берутся из снимка в базе, поэтому протокол не зависит от того, менялся ли тест позже.</figcaption>
+      </figure>
+    </section>
+
+    <hr class="rule">
+
+    <section id="guide">
+      <p class="eyebrow">Руководство</p>
+      <h2>От установки до протокола</h2>
+      <p>
+        Шесть шагов по порядку — от первого запуска до готового отчёта для отдела
+        кадров.
+      </p>
+
+      <div class="steps">
+        <article class="step">
+          <div>
+            <h3>Установка</h3>
+            <p>
+              Запустите <code>MaxTest-Setup-1.0.0.exe</code>. Мастер спросит согласие
+              с лицензией, папку установки, нужны ли ярлыки на рабочем столе и в меню
+              «Пуск», и предложит сразу задать PIN-код администратора.
+            </p>
+            <p>
+              Права администратора не нужны: по умолчанию программа ставится в профиль
+              пользователя. Если антивирус насторожился — добавьте папку в исключения,
+              установщик не подписан сертификатом.
+            </p>
+            <div class="note">
+              <span class="eyebrow">Проверка файла до запуска</span>
+              <p>
+                Убедиться, что установщик скачался целиком и не подменён, можно
+                командой <code>certutil -hashfile MaxTest-Setup-1.0.0.exe SHA256</code> —
+                результат должен совпасть с контрольной суммой в начале страницы.
+              </p>
+            </div>
+
+            <div class="note">
+              <span class="eyebrow">Проверка после установки</span>
+              <p>
+                Выполните в папке программы <code>MaxTest.exe --selfcheck</code>. Ответ
+                «ИТОГ: всё в порядке» означает, что плагины на месте и папка данных
+                доступна для записи.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div>
+            <h3>Список сотрудников</h3>
+            <p>
+              Главное окно → <strong>Сотрудники</strong> → «Добавить». ФИО, должность,
+              подразделение. Список нужен, чтобы люди не вводили себя вручную перед
+              каждым тестом и в отчёте не появились «Иванов И.И.», «Иванов Иван» и
+              «иванов и и» как три разных человека.
+            </p>
+            <p>
+              Уволившихся не удаляют, а скрывают: иначе пропадёт история их прошлых
+              аттестаций.
+            </p>
+          </div>
+        </article>
+
+        <article class="step">
+          <div>
+            <h3>Создание теста</h3>
+            <p>
+              Главное окно → <strong>Конструктор тестов</strong>. Введите название,
+              нажимайте «+ Вопрос» и заполняйте: тип, вес, раздел, текст, при
+              необходимости картинку и пояснение для разбора ошибок.
+            </p>
+            <p>
+              Внизу окна идёт постоянная проверка теста. Красная строка — вопрос нельзя
+              нормально оценить, жёлтая — предупреждение. Клик по строке открывает
+              проблемный вопрос. Клавиша <code>F5</code> показывает предпросмотр —
+              вопрос глазами сотрудника.
+            </p>
+            <p>
+              Тест сохраняется одним файлом <code>.qtest</code>: картинки внутри,
+              переносить их отдельно не нужно.
+            </p>
+          </div>
+        </article>
+
+        <article class="step">
+          <div>
+            <h3>Настройки теста</h3>
+            <p>
+              Меню «Тест» → «Настройки теста». Три вкладки:
+            </p>
+            <ul>
+              <li><strong>Прохождение</strong> — перемешивание, сколько вопросов задавать, ограничение времени, разрешён ли возврат назад, показывать ли сотруднику его результат.</li>
+              <li><strong>Оценивание</strong> — правило для вопросов с несколькими ответами, ручная проверка текстовых ответов, шкала оценок.</li>
+              <li><strong>Разделы</strong> — темы теста. Удаление раздела не удаляет вопросы: они станут «вне разделов».</li>
+            </ul>
+            <p>
+              Отбор «по N из каждого раздела» имеет смысл, когда вопросов в банке
+              заметно больше, чем задаётся: тогда у каждого сотрудника свой набор.
+            </p>
+          </div>
+        </article>
+
+        <article class="step">
+          <div>
+            <h3>Проведение</h3>
+            <p>
+              Главное окно → <strong>Пройти тест</strong>. Программа покажет список
+              готовых тестов из своей папки и недавно открытых; файл с флешки открывается
+              кнопкой «Открыть файл…».
+            </p>
+            <p>
+              Сотрудник выбирает себя в списке и нажимает «Начать». После завершения окно
+              закрывается, результат сохраняется автоматически, следующий человек начинает
+              с того же шага.
+            </p>
+            <div class="note">
+              <span class="eyebrow">Если компьютер выключился</span>
+              <p>
+                При следующем запуске программа сама предложит продолжить прерванную
+                попытку с того же вопроса. Потеряется максимум один ответ.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div>
+            <h3>Результаты и отчёт</h3>
+            <p>
+              Главное окно → <strong>Результаты</strong>. Отфильтруйте нужный тест, период
+              и сотрудников, при необходимости оставьте только не сдавших. Двойной щелчок
+              по строке открывает подробный разбор попытки.
+            </p>
+            <p>
+              «Выгрузить в Excel» сохраняет книгу из четырёх листов: сводная по попыткам,
+              каждый ответ отдельной строкой, проценты по разделам и список вопросов,
+              на которых чаще всего ошибались.
+            </p>
+            <p>
+              Если в тесте были развёрнутые ответы, на главном экране загорится
+              <strong>Проверка ответов</strong> со счётчиком: там их читают и решают,
+              засчитывать ли. Балл, процент и оценка пересчитываются сразу.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section id="types">
+      <p class="eyebrow">Справочник</p>
+      <h2>Типы вопросов</h2>
+
+      <div class="scroller">
+        <table class="spec">
+          <thead>
+            <tr><th scope="col">Тип</th><td><strong>Как заполняется и как оценивается</strong></td></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Один правильный ответ</th>
+              <td>Варианты и отметка напротив верного. Балл начисляется целиком или не начисляется.</td>
+            </tr>
+            <tr>
+              <th>Несколько правильных</th>
+              <td>Отмечаются все верные варианты. Оценивается «всё или ничего» либо частично — по настройке теста.</td>
+            </tr>
+            <tr>
+              <th>Ввод текста</th>
+              <td>Каждая строка в поле «Правильные ответы» — отдельный допустимый вариант, а не продолжение предыдущего. Для описаний включается многострочное поле ввода.</td>
+            </tr>
+            <tr>
+              <th>Установление соответствия</th>
+              <td>Пары «левая часть — правая часть». При прохождении правые части перемешиваются, балл считается за каждую верную пару.</td>
+            </tr>
+            <tr>
+              <th>Упорядочивание</th>
+              <td>Пункты записываются в правильном порядке, при прохождении перемешиваются. Оценивается доля правильно расставленных соседних пар.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="eyebrow">Флажок «не перемешивать»</span>
+        <p>
+          Нужен для вариантов вроде «Все перечисленное» и «Ничего из перечисленного»:
+          перемешанные, они оказываются в середине списка и теряют смысл.
+        </p>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section id="scoring">
+      <p class="eyebrow">Как это работает</p>
+      <h2>Как считается балл</h2>
+      <p>
+        Максимум считается по вопросам, которые сотрудник реально увидел. Если из банка
+        в 50 вопросов задаются 10, максимум — это сумма весов этих десяти, а не всего
+        банка.
+      </p>
+
+      <h3>Частичный балл за несколько ответов</h3>
+      <p>
+        Доля верно отмеченных минус доля лишних, но не ниже нуля:
+      </p>
+      <div class="formula">балл = вес × max(0, верные / всего_верных − лишние / всего_неверных)</div>
+      <p>
+        Из формулы следует полезное свойство: стратегия «отметить всё подряд» даёт ровно
+        ноль, а не половину балла.
+      </p>
+
+      <h3>Текстовые ответы</h3>
+      <p>
+        По умолчанию сравнение нормализованное: регистр, лишние пробелы, «ё» вместо «е»,
+        десятичная запятая и точка в конце не влияют на результат. Незасчитанный верный
+        ответ подрывает доверие к тесту сильнее, чем засчитанный лишний, поэтому вариантов
+        лучше перечислить больше.
+      </p>
+
+      <h3>Оценка</h3>
+      <p>
+        Процент округляется до целого, затем выбирается наибольший порог шкалы, который
+        его не превышает. Пороги задаются целыми процентами — так на границе «70 %» не
+        возникает расхождений из-за дробной арифметики.
+      </p>
+    </section>
+
+    <hr class="rule">
+
+    <section id="data">
+      <p class="eyebrow">Эксплуатация</p>
+      <h2>Данные и резервные копии</h2>
+      <p>
+        Всё лежит в папке <code>%APPDATA%\MaxTest</code> — рядом с программой не создаётся
+        ни одного файла, поэтому её можно ставить и в защищённые от записи папки.
+      </p>
+
+      <div class="scroller">
+        <table class="spec">
+          <tbody>
+            <tr><th><code>results.db</code></th><td>Все результаты аттестаций. Главный файл</td></tr>
+            <tr><th><code>backup\</code></th><td>Копии базы: одна в сутки, хранятся 30 последних</td></tr>
+            <tr><th><code>tests\</code></th><td>Папка тестов по умолчанию — её содержимое попадает в список выбора</td></tr>
+            <tr><th><code>progress\</code></th><td>Незавершённые попытки, появляются и исчезают сами</td></tr>
+            <tr><th><code>logs\</code></th><td>Журнал работы; сюда попадают все необработанные ошибки</td></tr>
+            <tr><th><code>security.json</code></th><td>PIN-код администратора — хранится хешем, не открытым текстом</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="eyebrow">Своя копия</span>
+        <p>
+          После каждой аттестации копируйте <code>results.db</code> на флешку или
+          в сетевую папку. Автоматические копии лежат на том же диске и от его отказа не спасают.
+        </p>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section id="trouble">
+      <p class="eyebrow">Поддержка</p>
+      <h2>Если что-то пошло не так</h2>
+
+      <div class="scroller">
+        <table class="spec">
+          <thead>
+            <tr><th scope="col">Симптом</th><td><strong>Что делать</strong></td></tr>
+          </thead>
+          <tbody>
+            <tr><th>Программа не запускается</th><td>Выполнить <code>MaxTest.exe --selfcheck</code> из командной строки и посмотреть отчёт</td></tr>
+            <tr><th>Вместо картинок пусто</th><td>Тот же <code>--selfcheck</code>: строка «JPEG: НЕТ» означает повреждённую установку — переустановить</td></tr>
+            <tr><th>Не сохраняется отчёт Excel</th><td>Файл открыт в Excel и заблокирован — закрыть и повторить</td></tr>
+            <tr><th>Не сохраняются результаты</th><td>Нет прав на запись в <code>%APPDATA%</code> — покажет <code>--selfcheck</code></td></tr>
+            <tr><th>Попытка удалена по ошибке</th><td>Взять базу из папки <code>backup\</code></td></tr>
+            <tr><th>Забыт PIN-код</th><td>Удалить файл <code>security.json</code> — защита снимется, данные останутся</td></tr>
+            <tr><th>Непонятная ошибка</th><td>Посмотреть <code>logs\maxtest.log</code> — там трассировка с датой и временем</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section id="limits">
+      <p class="eyebrow">Честно</p>
+      <h2>Чего программа не делает</h2>
+      <p>
+        Эти ограничения приняты сознательно — чтобы не создавать ложного ощущения
+        защищённости.
+      </p>
+
+      <ul class="facts">
+        <li><strong>Не блокирует компьютер во время теста.</strong> Alt+Tab и браузер доступны: защита от списывания здесь организационная, а не техническая.</li>
+        <li><strong>Не проверяет, кто сидит за компьютером.</strong> Сотрудник выбирает себя из списка сам.</li>
+        <li><strong>Не шифрует файл теста.</strong> <code>.qtest</code> — это zip-архив: тот, кто найдёт его на диске, может прочитать правильные ответы в обход программы. PIN-код закрывает разделы программы, но не файлы. Если это важно — не храните тесты на экзаменационном компьютере, приносите их на флешке.</li>
+        <li><strong>Не работает по сети.</strong> Одна машина, одна база. Результаты с нескольких компьютеров придётся объединять вручную.</li>
+      </ul>
+    </section>
+
+    <hr class="rule">
+
+    <section id="faq">
+      <p class="eyebrow">Вопрос — ответ</p>
+      <h2>Частые вопросы</h2>
+
+      <div class="faq">
+        <details open>
+          <summary>Нужен ли интернет для работы программы?</summary>
+          <p>
+            Нет. MaxTest полностью работает офлайн: и создание тестов, и
+            прохождение, и отчёты. Программа не отправляет данные на внешние
+            серверы — результаты аттестаций остаются на вашем компьютере.
+          </p>
+        </details>
+
+        <details>
+          <summary>Сколько стоит программа?</summary>
+          <p>
+            Ничего. MaxTest распространяется бесплатно по лицензии MIT: её можно
+            использовать в коммерческой организации, ставить на любое число
+            компьютеров, копировать и изменять.
+          </p>
+        </details>
+
+        <details>
+          <summary>Нужны ли права администратора для установки?</summary>
+          <p>
+            Нет. По умолчанию программа устанавливается в профиль пользователя.
+            Если запустить установщик от имени администратора, можно поставить
+            её для всех пользователей компьютера.
+          </p>
+        </details>
+
+        <details>
+          <summary>Сколько вопросов может быть в тесте?</summary>
+          <p>
+            Ограничения нет. Можно собрать банк из сотен вопросов и задавать
+            каждому сотруднику случайную выборку — например, по десять вопросов
+            из каждого раздела.
+          </p>
+        </details>
+
+        <details>
+          <summary>Какие типы вопросов поддерживаются?</summary>
+          <p>
+            Пять: один правильный ответ, несколько правильных, ввод текста,
+            установление соответствия и упорядочивание. К любому вопросу можно
+            добавить картинку — схему, фотографию оборудования, знак безопасности.
+          </p>
+        </details>
+
+        <details>
+          <summary>Где хранятся результаты аттестаций?</summary>
+          <p>
+            В базе SQLite в папке <code>%APPDATA%\MaxTest</code> на том же
+            компьютере. Копия базы делается автоматически раз в сутки, хранятся
+            тридцать последних. Отчёт выгружается в Excel.
+          </p>
+        </details>
+
+        <details>
+          <summary>Что будет, если компьютер выключится посреди теста?</summary>
+          <p>
+            Ничего страшного: прогресс сохраняется каждые пятнадцать секунд и
+            после каждого ответа. При следующем запуске программа предложит
+            продолжить попытку с того же вопроса.
+          </p>
+        </details>
+
+        <details>
+          <summary>Можно ли закрыть от сотрудников правильные ответы?</summary>
+          <p>
+            Да. PIN-код закрывает конструктор тестов, результаты, проверку
+            ответов и справочник сотрудников — доступным остаётся только
+            прохождение теста. При запуске тестирования разделы блокируются сразу.
+          </p>
+        </details>
+
+        <details>
+          <summary>Подходит ли программа для аттестации по охране труда?</summary>
+          <p>
+            Да, это основной сценарий: вопросы с картинками (знаки, схемы,
+            средства защиты), разделы по темам, весовые коэффициенты, гибкая
+            шкала оценок и протокол по каждому сотруднику с разбором ошибок.
+          </p>
+        </details>
+
+        <details>
+          <summary>Работает ли MaxTest в Windows 11?</summary>
+          <p>
+            Да. Программа собрана для 64-битных Windows 10 и Windows 11.
+            Устанавливать Python или что-либо ещё не нужно — всё внутри установщика.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <hr class="rule">
+
+    <section id="support">
+      <p class="eyebrow">Спасибо</p>
+      <h2>Поддержать проект</h2>
+
+      <div class="support">
+        <figure>
+          <img src="{{qr}}" alt="QR-код для перевода через Систему быстрых платежей" loading="lazy">
+        </figure>
+        <div>
+          <p>
+            Программа бесплатная и останется такой. Если она сэкономила вам время,
+            поддержать разработку можно переводом через Систему быстрых платежей —
+            отсканируйте код камерой в приложении своего банка.
+          </p>
+          <p>
+            Тот же код есть в самой программе: кнопка «Поддержать проект» внизу
+            главного окна, там же его можно сохранить картинкой.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>
+        MaxTest 1.0.0 · Лицензия MIT: программу можно свободно использовать,
+        в том числе в коммерческой организации, копировать и изменять. Поставляется
+        «как есть», без гарантий.
+      </p>
+    </footer>
+  </main>
+</div>
+
+<script>
+  // Подсветка текущего раздела в содержании.
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+    if (!links.length || !('IntersectionObserver' in window)) return;
+
+    var byId = {};
+    links.forEach(function (link) { byId[link.getAttribute('href').slice(1)] = link; });
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        links.forEach(function (link) { link.removeAttribute('aria-current'); });
+        var active = byId[entry.target.id];
+        if (active) active.setAttribute('aria-current', 'true');
+      });
+    }, { rootMargin: '-10% 0px -75% 0px' });
+
+    Object.keys(byId).forEach(function (id) {
+      var section = document.getElementById(id);
+      if (section) observer.observe(section);
+    });
+  })();
+</script>

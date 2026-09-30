@@ -1,0 +1,11 @@
+# Текстовые файлы хранятся в репозитории с LF, на Windows выгружаются с CRLF.
+* text=auto
+
+# Бинарные — никаких преобразований концов строк.
+# .qtest — это zip-архив: построчная конвертация его бы испортила.
+*.qtest binary
+*.png   binary
+*.jpg   binary
+*.ico   binary
+*.pdf   binary
+*.exe   binary

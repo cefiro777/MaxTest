@@ -1,0 +1,27 @@
+# --- Python и окружение
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# --- Сборка приложения (всё регенерируется: python -m tools.build_release)
+build/work/
+build/work-debug/
+dist/
+*.spec.bak
+MaxTestDebug.spec
+
+# --- Сайт: генерируется из template.html + images.json (python site/build_page.py)
+site/index.html
+site/artifact.html
+site/assets/
+site/_*
+
+# --- Исходник QR-кода для доната — банковский документ. В репозиторий идёт
+#     только готовая картинка maxtest/resources/donate_qr.png.
+build/donate_qr_source.pdf
+
+# --- Прочее
+samples/_tmp_*
+*.tmp
+*.log
